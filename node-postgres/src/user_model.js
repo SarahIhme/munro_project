@@ -26,7 +26,7 @@ const register_user = (body) => {
   return new Promise(function (resolve, reject) {
     const { username, password } = body;
     pool.query(
-      "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *",
+      "INSERT INTO users (user_name, password) VALUES ($1, $2) RETURNING *",
       [username, password],
       (error, results) => {
         if (error) {
@@ -41,15 +41,14 @@ const register_user = (body) => {
 const check_user_credentials = (body) => {
   return new Promise(function (resolve, reject) {
     const { username, hashedPassword } = body;
-    console.log(body);
     pool.query(
-      "SELECT user_name FROM users WHERE user_name == $1 AND password == $2",
+      "SELECT * FROM users WHERE user_name = $1 AND password = $2",
       [username, hashedPassword],
       (error, results) => {
         if (error) {
+          console.log(error);
           reject(error);
         }
-        console.log(results);
         resolve(results.rows);
       }
     );
