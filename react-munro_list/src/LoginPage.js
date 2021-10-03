@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Button, Form } from "semantic-ui-react";
+import { useCookies } from "react-cookie";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt-token"]);
 
   function submitPassword() {
     fetch(`http://localhost:3001/users/login`, {
@@ -12,7 +15,9 @@ const LoginPage = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
-    });
+    }).then((response) =>
+      setCookie("jwt-token", response.headers.get("Authorization"))
+    );
   }
 
   return (

@@ -9,9 +9,7 @@ const pool = new Pool({
 const user_exists = (user_name) => {
   return new Promise(function (resolve, reject) {
     pool.query(
-      "EXISTS(SELECT user_name FROM users WHERE user_name =='" +
-        user_name +
-        "')",
+      "SELECT user_name FROM users WHERE user_name =='" + user_name + "')",
       (error, results) => {
         if (error) {
           reject(error);

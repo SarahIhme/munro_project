@@ -6,7 +6,22 @@ const pool = new Pool({
   password: "postgres",
 });
 
-const getMunros = () => {
+const getMunrosWithoutUser = (user) => {
+  return new Promise(function (resolve, reject) {
+    pool.query(
+      "SELECT * FROM munros, completed WHERE completed.user_name = $1 AND completed.munros_id=munros.munro_id",
+      [munro_id],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(results.rows);
+      }
+    );
+  });
+};
+
+const getMunrosWithUser = () => {
   return new Promise(function (resolve, reject) {
     pool.query("SELECT * FROM munros", (error, results) => {
       if (error) {
@@ -35,6 +50,6 @@ const updateMunroCompleted = (body) => {
 };
 
 module.exports = {
-  getMunros,
+  getMunrosWithoutUser,
   updateMunroCompleted,
 };

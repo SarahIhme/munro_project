@@ -7,7 +7,7 @@ const { sign } = require("jsonwebtoken");
 
 const { createHash } = require("crypto");
 
-const jwtSecretKey = "REPLACE_THIS_WITH_SECRET_KEY";
+const jwtSecretKey = "Munros are really great";
 
 app.use(
   jwt({
@@ -35,7 +35,7 @@ app.use(function (req, res, next) {
 
 app.get("/", (req, res) => {
   munro_model
-    .getMunros()
+    .getMunrosWithoutUser()
     .then((response) => {
       res.status(200).send(response);
     })
@@ -61,7 +61,7 @@ app.listen(port, () => {
 });
 
 app.post("/users/register", (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
   // generate hash from plain password
   const hashedPassword = createHash("sha256")
     .update(password)
@@ -69,29 +69,27 @@ app.post("/users/register", (req, res) => {
     .toString("hex");
 
   // find user from db with matching email & hashedPassword
-  let user = user_model.user_exists();
-  if (user) {
-    res.status(401).send({
-      message: "Email already exists.",
-      user,
-    });
-  } else {
-    // change to insert in DB not session variable
-    user_model.register_user({ user, password: hashedPassword });
+  user_model.user_exists(username).then((user) => {
+    if (user) {
+      res.status(401).send({
+        message: "Name already exists.",
+        username,
+      });
+    } else {
+      // change to insert in DB not session variable
+      user_model.register_user({ username, hashedPassword });
 
-    res.status(200).send({
-      message: "Account created.",
-    });
-  }
+      res.status(200).send({
+        message: "Account created.",
+      });
+    }
+  });
 });
 
-app.post("/users/login", (req, res) => {
+app.post("/users/login", async (req, res) => {
   console.log(req.body);
   const { username, password } = req.body;
 
-  console.log(username);
-  console.log(password);
-
   // generate hash from plain password
   const hashedPassword = createHash("sha256")
     .update(password)
@@ -99,7 +97,7 @@ app.post("/users/login", (req, res) => {
     .toString("hex");
 
   // find user from db with matching email & hashedPassword
-  const logged_in_user = user_model.check_user_credentials({
+  const logged_in_user = await user_model.check_user_credentials({
     username,
     hashedPassword,
   });
@@ -110,6 +108,7 @@ app.post("/users/login", (req, res) => {
       algorithm: "HS256",
     });
 
+    console.log(token);
     // expose Authorization header to return to client
     res.header("Access-Control-Expose-Headers", "Authorization");
     res.header("Authorization", token);
