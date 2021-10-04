@@ -6,27 +6,29 @@ import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import Munros from "./Munros.js";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import MunroButton from "./MunroButton";
 
 function App() {
   return (
     <Router>
-      <div>
-        <div style={{ float: "right", margin: "1rem" }}>
-          <Link to="/login">
-            <Login />
-          </Link>
-          <Link to="/register">
-            <Register />
-          </Link>
-        </div>
+      <div style={{ float: "center", margin: "1rem" }}>
+        <Link to="/login">
+          <Login />
+        </Link>
+        <Link to="/register">
+          <Register />
+        </Link>
+        <Link to="/">
+          <MunroButton />
+        </Link>
         <Switch>
           <Route exact path="/">
             <Munros />
           </Route>
-          <Route path="/login">
+          <Route exact path="/login">
             <LoginPage />
           </Route>
-          <Route path="/register">
+          <Route exact path="/register">
             <RegisterPage />
           </Route>
         </Switch>

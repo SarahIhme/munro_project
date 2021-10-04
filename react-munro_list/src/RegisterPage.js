@@ -17,7 +17,6 @@ const RegisterPage = () => {
 
   return (
     <Form onSubmit={() => registerUser()}>
-      np
       <Form.Field>
         <label>Username</label>
         <input

@@ -22,7 +22,6 @@ const LoginPage = () => {
 
   return (
     <Form onSubmit={() => submitPassword()}>
-      np
       <Form.Field>
         <label>Username</label>
         <input
