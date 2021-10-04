@@ -3,8 +3,11 @@ import "semantic-ui-css/semantic.min.css";
 import { Button, Table, Checkbox, Progress } from "semantic-ui-react";
 import { useCookies } from "react-cookie";
 
-function getmunros() {
-  return fetch("http://localhost:3001")
+function getmunros(token) {
+  return fetch("http://localhost:3001/", {
+    method: "GET",
+    headers: { Authorization: "Bearer " + token },
+  })
     .then((response) => {
       return response.text();
     })
@@ -14,13 +17,14 @@ function getmunros() {
     });
 }
 
-function munroUpdate(munro_id, completed, munroUpdateCallback) {
+function munroUpdate(munro_id, completed, munroUpdateCallback, token) {
   const done = window.confirm("Have you done this mountain?");
   if (done) {
     fetch(`http://localhost:3001/munros`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
       },
       body: JSON.stringify({ munro_id, completed }),
     }).then(munroUpdateCallback);
@@ -40,7 +44,8 @@ const Munros = () => {
     }
   };
 
-  const updateMunros = () => getmunros().then((data) => setmunros(data));
+  const updateMunros = () =>
+    getmunros(cookies["jwt-token"]).then((data) => setmunros(data));
 
   let message;
   const completed_munros = munros.filter(
@@ -138,7 +143,12 @@ const Munros = () => {
                   <Checkbox
                     checked={elem.completed}
                     onClick={() => {
-                      munroUpdate(elem.munro_id, !elem.completed, updateMunros);
+                      munroUpdate(
+                        elem.munro_id,
+                        !elem.completed,
+                        updateMunros,
+                        cookies["jwt-token"]
+                      );
                     }}
                   ></Checkbox>
                 </Table.Cell>

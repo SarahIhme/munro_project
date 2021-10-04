@@ -9,9 +9,11 @@ const pool = new Pool({
 const user_exists = (user_name) => {
   return new Promise(function (resolve, reject) {
     pool.query(
-      "SELECT user_name FROM users WHERE user_name =='" + user_name + "')",
+      "SELECT * FROM users WHERE user_name = $1",
+      [user_name],
       (error, results) => {
         if (error) {
+          console.log(error);
           reject(error);
         }
         resolve(results.rows);
@@ -22,10 +24,10 @@ const user_exists = (user_name) => {
 
 const register_user = (body) => {
   return new Promise(function (resolve, reject) {
-    const { username, password } = body;
+    const { username, hashedPassword } = body;
     pool.query(
       "INSERT INTO users (user_name, password) VALUES ($1, $2) RETURNING *",
-      [username, password],
+      [username, hashedPassword],
       (error, results) => {
         if (error) {
           reject(error);

@@ -15,7 +15,7 @@ app.use(
     algorithms: ["HS256"],
     requestProperty: "auth",
   }).unless({
-    path: ["/users/login", "/users/register", "/"],
+    path: ["/users/login", "/users/register"],
   })
 );
 
@@ -35,7 +35,7 @@ app.use(function (req, res, next) {
 
 app.get("/", (req, res) => {
   munro_model
-    .getMunrosWithoutUser()
+    .getMunrosWithUser(req.auth.username)
     .then((response) => {
       res.status(200).send(response);
     })
@@ -47,7 +47,7 @@ app.get("/", (req, res) => {
 app.put("/munros", (req, res) => {
   console.log(req.body);
   munro_model
-    .updateMunroCompleted(req.body)
+    .updateMunroCompleted(req.auth.username, req.body)
     .then((response) => {
       res.status(200).send(response);
     })
@@ -68,17 +68,19 @@ app.post("/users/register", (req, res) => {
     .digest()
     .toString("hex");
 
-  // find user from db with matching email & hashedPassword
   user_model.user_exists(username).then((user) => {
-    if (user) {
+    if ((user.length = 0)) {
+      console.log(user);
+      console.log("Here");
       res.status(401).send({
         message: "Name already exists.",
         username,
       });
     } else {
       // change to insert in DB not session variable
+      console.log("There");
       user_model.register_user({ username, hashedPassword });
-
+      munro_model.addUserMunros(username);
       res.status(200).send({
         message: "Account created.",
       });
@@ -102,7 +104,7 @@ app.post("/users/login", async (req, res) => {
     hashedPassword,
   });
 
-  if (logged_in_user) {
+  if (logged_in_user.length > 0) {
     // generate JWT token with user credentials as encrypted payload
     const token = sign({ username }, jwtSecretKey, {
       algorithm: "HS256",
