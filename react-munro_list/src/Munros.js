@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 function getmunros(token) {
   return fetch("http://localhost:3001/", {
     method: "GET",
-    headers: { Authorization: "Bearer " + token },
+    headers: { Authorization: token },
   })
     .then((response) => {
       return response.text();
@@ -24,7 +24,7 @@ function munroUpdate(munro_id, completed, munroUpdateCallback, token) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        Authorization: token,
       },
       body: JSON.stringify({ munro_id, completed }),
     }).then(munroUpdateCallback);
@@ -48,6 +48,7 @@ const Munros = () => {
     getmunros(cookies["jwt-token"]).then((data) => setmunros(data));
 
   let message;
+
   const completed_munros = munros.filter(
     (munros) => munros["completed"]
   ).length;
@@ -138,7 +139,9 @@ const Munros = () => {
                 <Table.Cell>{elem.name}</Table.Cell>
                 <Table.Cell>{elem.height_m}</Table.Cell>
                 <Table.Cell>{elem.height_ft}</Table.Cell>
-                <Table.Cell>{elem.completed ? "good boi" : "lame"}</Table.Cell>
+                <Table.Cell>
+                  {elem.completed ? "Good boi" : "Go bag it!"}
+                </Table.Cell>
                 <Table.Cell>
                   <Checkbox
                     checked={elem.completed}

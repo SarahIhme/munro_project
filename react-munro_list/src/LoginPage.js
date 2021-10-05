@@ -16,7 +16,7 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ username, password }),
     }).then((response) =>
-      setCookie("jwt-token", response.headers.get("Authorization"))
+      setCookie("jwt-token", "Bearer " + response.headers.get("Authorization"))
     );
   }
 

@@ -5,7 +5,13 @@ import Register from "./Register";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import Munros from "./Munros.js";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  Redirect,
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+} from "react-router-dom";
 import MunroButton from "./MunroButton";
 
 function App() {
@@ -18,11 +24,14 @@ function App() {
         <Link to="/register">
           <Register />
         </Link>
-        <Link to="/">
+        <Link to="/munros">
           <MunroButton />
         </Link>
         <Switch>
           <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+          <Route exact path="/munros">
             <Munros />
           </Route>
           <Route exact path="/login">
