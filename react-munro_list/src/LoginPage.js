@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form } from "semantic-ui-react";
 import { useCookies } from "react-cookie";
+import { Redirect } from "react-router-dom";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");

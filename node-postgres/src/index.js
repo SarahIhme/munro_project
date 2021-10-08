@@ -15,7 +15,7 @@ app.use(
     algorithms: ["HS256"],
     requestProperty: "auth",
   }).unless({
-    path: ["/users/login", "/users/register"],
+    path: ["/users/login", "/users/register", "/munros/general"],
   })
 );
 
@@ -36,6 +36,17 @@ app.use(function (req, res, next) {
 app.get("/", (req, res) => {
   munro_model
     .getMunrosWithUser(req.auth.username)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
+});
+
+app.get("/munros/general", (req, res) => {
+  munro_model
+    .getMunrosWithoutUser()
     .then((response) => {
       res.status(200).send(response);
     })
