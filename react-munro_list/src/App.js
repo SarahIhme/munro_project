@@ -28,7 +28,7 @@ function App() {
             <Link to="/munros">
               <MunroButton />
             </Link>
-            <Logout onClick={console.log("Would like logout behaviour")} />
+            <Logout />
           </div>
         ) : (
           <div>
