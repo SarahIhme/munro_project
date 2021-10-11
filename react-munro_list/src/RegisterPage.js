@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Button, Form } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
 
   function registerUser() {
     fetch(`http://localhost:3001/users/register`, {
@@ -12,7 +14,7 @@ const RegisterPage = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
-    });
+    }).then(history.push("/login"));
   }
 
   return (

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Button, Form } from "semantic-ui-react";
 import { useCookies } from "react-cookie";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(["jwt-token"]);
 
   function submitPassword() {
@@ -16,33 +16,36 @@ const LoginPage = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
-    }).then((response) =>
-      setCookie("jwt-token", "Bearer " + response.headers.get("Authorization"))
-    );
+    }).then((response) => {
+      setCookie("jwt-token", "Bearer " + response.headers.get("Authorization"));
+      history.push("/munros");
+    });
   }
 
   return (
-    <Form onSubmit={() => submitPassword()}>
-      <Form.Field>
-        <label>Username</label>
-        <input
-          name="username"
-          id="username"
-          placeholder="Username"
-          onChange={(event) => setUsername(event.target.value)}
-        />
-      </Form.Field>
-      <Form.Field>
-        <label>Password</label>
-        <input
-          name="password"
-          id="password"
-          placeholder="Password"
-          onChange={(event) => setPassword(event.target.value)}
-        />
-      </Form.Field>
-      <Button type="submit">Login</Button>
-    </Form>
+    <div>
+      <Form onSubmit={() => submitPassword()}>
+        <Form.Field>
+          <label>Username</label>
+          <input
+            name="username"
+            id="username"
+            placeholder="Username"
+            onChange={(event) => setUsername(event.target.value)}
+          />
+        </Form.Field>
+        <Form.Field>
+          <label>Password</label>
+          <input
+            name="password"
+            id="password"
+            placeholder="Password"
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </Form.Field>
+        <Button type="submit">Login</Button>
+      </Form>
+    </div>
   );
 };
 
