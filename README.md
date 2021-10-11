@@ -3,7 +3,7 @@ Keep track of which munros you have summited!
 
 ## Technologies used
 
-In this project I used JavaScript, Node.js and PostgresQL. PostgresQL keeps track of the users and the munros each user has done.
+In this project I used JavaScript, React and PostgresQL. PostgresQL keeps track of the users and the munros each user has done.
 
 ## Your personalised achievements
 
