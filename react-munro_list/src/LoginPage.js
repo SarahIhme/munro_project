@@ -28,8 +28,6 @@ const LoginPage = () => {
         <Form.Field>
           <label>Username</label>
           <input
-            name="username"
-            id="username"
             placeholder="Username"
             onChange={(event) => setUsername(event.target.value)}
           />
@@ -37,8 +35,7 @@ const LoginPage = () => {
         <Form.Field>
           <label>Password</label>
           <input
-            name="password"
-            id="password"
+            type="password"
             placeholder="Password"
             onChange={(event) => setPassword(event.target.value)}
           />
